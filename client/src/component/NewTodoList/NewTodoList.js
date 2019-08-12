@@ -7,7 +7,7 @@ class NewTodoList extends Component
 {
     state = {
         todo:{
-            name:this.formHelper('input','text','Todo Name',''),
+            name:this.formHelper('input','text','Todo Title',''),
             desc:this.formHelper('input','text','What to do ?','')
         },
         loading:false,
@@ -22,6 +22,13 @@ class NewTodoList extends Component
         this.setState({loading:true});
         this.props.history.push('/todo-list');
 
+    }
+    inputChangedHandler = (event , inputIdent) =>{
+        const updatedTodo = {...this.state.todo};
+        const updatedElement = {...updatedTodo[inputIdent]};
+        updatedElement.value = event.target.value;
+        updatedTodo[inputIdent] = updatedElement;
+        this.setState({todo:updatedTodo});
     }
     formHelper (elemType,elemConfigType,elemConfigPlaceHolder,elemValue){
         let elem = {
@@ -47,7 +54,11 @@ class NewTodoList extends Component
             <form onSubmit={this.submitHandler}>
                 <p><strong>New Todo</strong></p>
                 {   formElementArray.map(elem => (
-                            <Input key={elem.id} {...elem.config}></Input>
+                            <Input 
+                            key={elem.id} 
+                            {...elem.config}
+                            changed={(event) => this.inputChangedHandler(event,elem.id)}
+                         ></Input>
                     ))
                 }
                 <Button btnType="Success">Submit</Button>
