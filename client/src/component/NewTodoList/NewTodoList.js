@@ -3,11 +3,12 @@ import Button from '../UI/Button/Button';
 import Input from '../UI/Input/Input';
 import classes from './NewTodoList.css';
 import Spinner from '../UI/Spinner/Spinner';
+import axios from 'axios';
 class NewTodoList extends Component
 {
     state = {
         todo:{
-            name:this.formHelper('input','text','Todo Title',''),
+            title:this.formHelper('input','text','Todo Title',''),
             desc:this.formHelper('input','text','What to do ?','')
         },
         loading:false,
@@ -19,8 +20,15 @@ class NewTodoList extends Component
     }
     submitHandler = (event) =>{
         event.preventDefault();
+        let message = {}
+        for(let key in this.state.todo){
+            message[key] = this.state.todo[key].value;
+        }
         this.setState({loading:true});
-        this.props.history.push('/todo-list');
+        axios.post('/api/addnew',message).then(res => {
+            this.setState({loading:false});
+            this.props.history.push('/todo-list');
+        }).catch(err => console.log(err));
 
     }
     inputChangedHandler = (event , inputIdent) =>{

@@ -19,8 +19,7 @@ class ViewTodoList extends Component {
         let todos = <Spinner/>
         if(this.state.data){
             todos = this.state.data.map(todo =>(
-                //key should be changed bec the logic is not correct
-                <Todo key={todo.title} title={todo.title} desc={todo.desc} />
+                <Todo key={todo.id} title={todo.title} desc={todo.desc} />
             ));
         }
         return(

@@ -1,7 +1,8 @@
 const express = require('express');
 const path = require('path');
-var cors = require('cors');
-const generatePassword = require('password-generator');
+var bodyParser = require("body-parser");
+const cors = require('cors');
+
 
 const MongoClient = require('mongodb').MongoClient;
 const url = "mongodb+srv://admin:admin@payme-todo-list-mg5qr.mongodb.net/users?retryWrites=true&w=majority";
@@ -9,24 +10,13 @@ let data = [];
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-// Put all API endpoints under '/api'
-app.get('/api/passwords', (req, res) => {
-  const count = 5;
 
-  // Generate some passwords
-  const passwords = Array.from(Array(count).keys()).map(i =>
-    generatePassword(12, false)
-  )
-
-  // Return them as json
-  res.json(passwords);
-
-  console.log(`Sent ${count} passwords`);
-});
 app.get('/api/getall',(req,res)=>{
     data = [];
     MongoClient.connect(url, function(err, db) {
@@ -38,8 +28,8 @@ app.get('/api/getall',(req,res)=>{
           
           result.map(elem => {
             if(elem.title){
-                data.push({title:elem.title,desc:elem.desc})
-                console.log(elem);
+                data.push({id:elem._id,title:elem.title,desc:elem.desc})
+                console.log(elem._id);
               }
           })
           db.close();
@@ -47,6 +37,22 @@ app.get('/api/getall',(req,res)=>{
           return res.json(data)
         });
       });
+
+})
+app.post('/api/addnew',(req,res)=>{
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    let dbo = db.db("users");
+    let message = req.body;
+    console.log(message);
+    let myobj = {title: message.title, desc: message.desc };
+    dbo.collection('user1').insertOne(myobj, function(err, res) {
+      if (err) throw err;
+      console.log("1 document inserted");
+      db.close();
+    });
+    return res.json('done');
+  });
 
 })
 // The "catchall" handler: for any request that doesn't
@@ -58,5 +64,5 @@ app.get('*', (req, res) => {
 const port = process.env.PORT || 5000;
 app.listen(port);
 
-console.log(`Password generator listening on ${port}`);
+console.log(`Server listening on ${port}`);
 
