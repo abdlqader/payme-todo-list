@@ -1,16 +1,16 @@
-PayMe-task 
-first user 
-(
-  username : user1
-  password : user1
-)
-second user
-(
-  username : user2
-  password : user2
-)
+PayMe-task <br/>
+first user <br/>
+(<br/>
+  username : user1<br/>
+  password : user1<br/>
+)<br/>
+second user<br/>
+(<br/>
+  username : user2<br/>
+  password : user2<br/>
+)<br/>
 
-i choose NoSql database in my case mongoDb for these reasons
-1- easy to add more feature to a single todo without droping the whole table/Collection
-2-no need to multi row transaction in our application
-3-no need for computational advantage of SQL and can make use of Consistency, Availability of NoSql
+i choose NoSql database in my case mongoDb for these reasons<br/>
+1- easy to add more feature to a single todo without droping the whole table/Collection<br/>
+2-no need to multi row transaction in our application<br/>
+3-no need for computational advantage of SQL and can make use of Consistency, Availability of NoSql<br/>
