@@ -57,7 +57,7 @@ app.post('/api/getall',(req,res)=>{
           if (err) throw err;
           
           result.map(elem => {
-            if(elem.title){
+            if(elem.title || elem.desc){
                 data.push({id:elem._id,title:elem.title,desc:elem.desc})
               }
           })
