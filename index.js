@@ -16,6 +16,35 @@ app.use(bodyParser.json());
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
+app.post('/api/checkuser',(req,res)=>{
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    let dbo = db.db("users");
+    let message = req.body;
+    //not working for some reason i had to work around the problem
+    //db.getCollectionNames().forEach(function(collname) {})
+    const collections = ['user1','user2']
+    if(collections.includes(message.username)){
+      console.log(message);
+      let myobj = {username: message.username, password: message.password };
+      //this will be fixed
+      //i need to keep going with the task for now
+      dbo.collection(message.username).findOne({}, function(err, result) {
+        if (err) throw err;
+        if(message.username === result.username && message.password === result.password){
+          console.log('done');
+          return res.json(true);
+        }else{
+          return res.json(false);
+        }
+        db.close();
+      });
+  }else{
+    return res.json(false);
+  }
+  });
+
+})
 
 app.post('/api/getall',(req,res)=>{
     data = [];

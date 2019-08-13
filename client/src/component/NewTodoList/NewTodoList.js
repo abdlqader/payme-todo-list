@@ -11,16 +11,12 @@ class NewTodoList extends Component
             title:this.formHelper('input','text','Todo Title',''),
             desc:this.formHelper('input','text','What to do ?','')
         },
-        loading:false,
-        responseToPost: null
+        loading:false
     }
     
-    createNewFormHandler=()=>{
-        this.setState({creatingNew:true})
-    }
     submitHandler = (event) =>{
         event.preventDefault();
-        let message = {user:'user1'}
+        let message = {user : this.props.user}
         for(let key in this.state.todo){
             message[key] = this.state.todo[key].value;
         }

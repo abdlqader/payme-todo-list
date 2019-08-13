@@ -6,11 +6,10 @@ import Spinner from '../UI/Spinner/Spinner';
 class ViewTodoList extends Component {
     state = {
         data:null,
-        user:'user1'
     }
 
     componentDidMount(){
-        let message = {user:this.state.user}
+        let message = {user:this.props.user}
         axios.post('/api/getall',message).then(res => {
             console.log(res.data);
             this.setState({data:res.data});
@@ -18,7 +17,7 @@ class ViewTodoList extends Component {
     }
     onDeleteHandler =  (id) =>{
         if(window.confirm("Is this task done ?")){
-        const message = {user:this.state.user,id:id}
+        const message = {user:this.props.user,id:id}
         let newData = this.state.data;
         let counter = 0;
         axios.post('/api/delete',message).then(
