@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 var bodyParser = require("body-parser");
 const cors = require('cors');
-
+const mongodb =  require('mongodb')
 
 const MongoClient = require('mongodb').MongoClient;
 const url = "mongodb+srv://admin:admin@payme-todo-list-mg5qr.mongodb.net/users?retryWrites=true&w=majority";
@@ -17,19 +17,19 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 
-app.get('/api/getall',(req,res)=>{
+app.post('/api/getall',(req,res)=>{
     data = [];
+    let message = req.body;
     MongoClient.connect(url, function(err, db) {
 
         if (err) throw err;
         let dbo = db.db("users");
-        dbo.collection('user1').find({}).toArray(function(err, result) {
+        dbo.collection(message.user).find({}).toArray(function(err, result) {
           if (err) throw err;
           
           result.map(elem => {
             if(elem.title){
                 data.push({id:elem._id,title:elem.title,desc:elem.desc})
-                console.log(elem._id);
               }
           })
           db.close();
@@ -46,7 +46,7 @@ app.post('/api/addnew',(req,res)=>{
     let message = req.body;
     console.log(message);
     let myobj = {title: message.title, desc: message.desc };
-    dbo.collection('user1').insertOne(myobj, function(err, res) {
+    dbo.collection(message.user).insertOne(myobj, function(err, res) {
       if (err) throw err;
       console.log("1 document inserted");
       db.close();
@@ -54,6 +54,21 @@ app.post('/api/addnew',(req,res)=>{
     return res.json('done');
   });
 
+})
+app.post('/api/delete',(req,res)=>{
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    let dbo = db.db("users");
+    let message = req.body;
+    let myquery = { _id:new mongodb.ObjectId(message.id) };
+    console.log(myquery);
+    dbo.collection(message.user).deleteOne(myquery, function(err, obj) {
+      if (err) throw err;
+      console.log("1 document deleted");
+      db.close();
+    });
+    return res.json('done');
+  });
 })
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

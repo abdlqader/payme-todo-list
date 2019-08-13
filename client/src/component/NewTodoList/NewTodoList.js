@@ -20,7 +20,7 @@ class NewTodoList extends Component
     }
     submitHandler = (event) =>{
         event.preventDefault();
-        let message = {}
+        let message = {user:'user1'}
         for(let key in this.state.todo){
             message[key] = this.state.todo[key].value;
         }
