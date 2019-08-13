@@ -20,14 +20,17 @@ class ViewTodoList extends Component {
         const message = {user:this.props.user,id:id}
         let newData = this.state.data;
         let counter = 0;
-        axios.post('/api/delete',message).then(
-            this.state.data.map(elem =>{
-                if(elem.id === id){
-                    newData.splice(counter,1);
-                    this.setState({data:newData});
-                }
-            })
-        ).catch(err => console.log(err));
+        this.state.data.map(elem =>  {
+            if(elem.id === id){
+                newData.splice(counter,1);
+            }
+            counter++;
+        })
+                
+        console.log(newData);
+        axios.post('/api/delete',message).then(res =>{
+            this.setState({data:newData});
+        }).catch(err => console.log(err));
         }
     }
 

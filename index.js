@@ -95,8 +95,8 @@ app.post('/api/delete',(req,res)=>{
       if (err) throw err;
       console.log("1 document deleted");
       db.close();
+      return res.json('done');
     });
-    return res.json('done');
   });
 })
 // The "catchall" handler: for any request that doesn't
